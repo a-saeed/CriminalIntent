@@ -1,11 +1,14 @@
 package com.bignerdranch.android.criminalintent;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class Crime
 {
     private UUID mId;
     private String mTitle;
+    private Date mDate;
+    private boolean isSolved;
     public Crime()
     {
         //Generate a unique identifier
@@ -14,6 +17,22 @@ public class Crime
 
     public UUID getmId() {
         return mId;
+    }
+
+    public Date getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(Date mDate) {
+        this.mDate = mDate;
+    }
+
+    public boolean isSolved() {
+        return isSolved;
+    }
+
+    public void setSolved(boolean solved) {
+        isSolved = solved;
     }
 
     public String getmTitle() {
