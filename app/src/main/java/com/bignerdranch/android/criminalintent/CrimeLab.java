@@ -8,6 +8,7 @@ import java.util.UUID;
 //SINGLETON
 public class CrimeLab {
     private ArrayList<Crime> mCrimes;
+
     private static CrimeLab sCrimeLab; // automatically initialized to null
     private Context mAppContext;
 
@@ -15,6 +16,13 @@ public class CrimeLab {
     {
         mAppContext = appContext;
         mCrimes = new ArrayList<Crime>();
+        for (int i=0 ; i<100 ;i++)
+        {
+            Crime c = new Crime();
+            c.setmTitle("crime #"+i);
+            c.setSolved(i%2 ==0); //every other one
+            mCrimes.add(c);
+        }
     }
 
     public static CrimeLab get (Context c)
