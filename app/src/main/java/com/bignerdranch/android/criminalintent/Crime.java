@@ -42,4 +42,13 @@ public class Crime
     public void setmTitle(String mTitle) {
         this.mTitle = mTitle;
     }
+
+    //overriding toString() to populate
+    //TextView in ArrayAdapter with
+    //useful information
+    @Override
+    public String toString()
+    {
+        return mTitle;
+    }
 }
