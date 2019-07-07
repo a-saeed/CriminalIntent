@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +43,12 @@ public class CrimeListFragment extends ListFragment {
         //CrimeAdapter can hold Crime objects
         //no need to cast to Crime.
         Crime c = ((CrimeAdapter) getListAdapter()).getItem(position);
-        Log.d(TAG, c.getmTitle()+"was clicked: ");
+        //start CrimeActivity
+        //CrimeListFragment uses the getActivity() method
+        //to pass its hosting activity as the context object
+        //that the intent constructor requires.
+        Intent i = new Intent(getActivity() , CrimeActivity.class);
+        startActivity(i);
     }
 
     //a custom adapter to show crime-specific data in list view.
