@@ -48,6 +48,9 @@ public class CrimeListFragment extends ListFragment {
         //to pass its hosting activity as the context object
         //that the intent constructor requires.
         Intent i = new Intent(getActivity() , CrimeActivity.class);
+        //passing the mCrimeId as an EXTRA so that
+        //CrimeActivity data for a specific Crime.
+        i.putExtra(CrimeFragment.EXTRA_CRIME_ID , c.getmId());
         startActivity(i);
     }
 
