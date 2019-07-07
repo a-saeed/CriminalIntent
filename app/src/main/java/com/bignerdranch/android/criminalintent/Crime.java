@@ -7,7 +7,7 @@ public class Crime
 {
     private UUID mId;
     private String mTitle;
-    private Date mDate;
+    private Date mDate = new Date();
     private boolean isSolved;
     public Crime()
     {

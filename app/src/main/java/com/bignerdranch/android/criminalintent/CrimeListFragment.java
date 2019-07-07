@@ -3,9 +3,12 @@ package com.bignerdranch.android.criminalintent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.fragment.app.ListFragment;
 
@@ -15,20 +18,17 @@ public class CrimeListFragment extends ListFragment {
     private static final String TAG="CrimeListFragment";
     private ArrayList<Crime> mCrimes;
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //set title of the activity that will host this fragment
         getActivity().setTitle(R.string.crimes_title);
         //access list of crimes stored in crimeLab
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
 
-        //create an instance of ArrayAdapter<T>
-        // and make it the adapter for CrimeListFragment’s ListView
-        ArrayAdapter<Crime> adapter =
-                new ArrayAdapter<Crime>(getActivity(),
-                        android.R.layout.simple_list_item_1,
-                        mCrimes);
+        //using the custom CrimeAdapter
+        //instead of basic ArrayAdapter
+        CrimeAdapter adapter = new CrimeAdapter(mCrimes);
+
         //setListAdapter(ListAdapter) method is a
         // ListFragment convenience method that you can use to
         // set the adapter of the implicit ListView managed by CrimeListFragment.
@@ -39,8 +39,48 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l , View v , int position , long id)
     {
-        Crime c = (Crime) (getListAdapter()).getItem(position);
+        //CrimeAdapter can hold Crime objects
+        //no need to cast to Crime.
+        Crime c = ((CrimeAdapter) getListAdapter()).getItem(position);
         Log.d(TAG, c.getmTitle()+"was clicked: ");
+    }
+
+    //a custom adapter to show crime-specific data in list view.
+    private class CrimeAdapter extends ArrayAdapter<Crime>
+    {
+        //calling super class constructor is required
+        //to properly hook up our data set of (Crime)s.
+        public CrimeAdapter(ArrayList<Crime> crimes)
+        {
+            super(getActivity(),0 , crimes);
+        }
+
+        @Override
+        public View getView(int position , View convertView , ViewGroup parent)
+        {
+            //if we weren't given a view , inflate one.
+            if(convertView==null)
+                convertView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.list_item_crime , null);
+
+            //configure the view for this crime
+            Crime c = getItem(position);
+
+            TextView titleTextView =
+                    (TextView) convertView.findViewById(R.id.crime_list_item_titleTextView);
+            titleTextView.setText(c.getmTitle());
+
+            TextView dateTextView =
+                    (TextView) convertView.findViewById(R.id.crime_list_item_dateTextView);
+            dateTextView.setText(c.getmDate().toString());
+
+            CheckBox solvedCheckBox =
+                    (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
+            solvedCheckBox.setChecked(c.isSolved());
+
+            //return the view object to list view
+            return convertView;
+        }
     }
 
 }
