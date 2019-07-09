@@ -54,6 +54,15 @@ public class CrimeListFragment extends ListFragment {
         startActivity(i);
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //inform list view's adapter that the data set has changed
+        //(or may have changed) so it can refetch the data
+        //and reload the list
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
     //a custom adapter to show crime-specific data in list view.
     private class CrimeAdapter extends ArrayAdapter<Crime>
     {
