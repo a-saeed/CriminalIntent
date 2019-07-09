@@ -7,12 +7,13 @@ public class Crime
 {
     private UUID mId;
     private String mTitle;
-    private Date mDate = new Date();
+    private Date mDate;
     private boolean isSolved;
     public Crime()
     {
         //Generate a unique identifier
         mId= UUID.randomUUID();
+        mDate = new Date();
     }
 
     public UUID getmId() {
