@@ -27,16 +27,29 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    //Writing a newInstance(UUID)
+    //any activity in need of this fragment
+    //should call this method.
+    public static CrimeFragment newInstance(UUID crimeId)
+    {
+        //create arguments bundle
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_CRIME_ID , crimeId);
+        //create fragment instance
+        //attach arguments to the fragment
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+
+        return  fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //retrieving the EXTRA CrimeId from
-        //CrimeActivity's intent directly
-        //using getActivity().
-        //UUID is a serializable object.
-        UUID crimeId =
-                (UUID)getActivity().getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        //retrieve the EXTRA (crimeId)
+        //from fragment's arguments
+        //instead directly from its hosting activity
+        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
         //use the EXTRA crimeId to fetch
         //the crime from CrimeLab.
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
