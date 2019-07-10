@@ -43,6 +43,27 @@ public class CrimePagerActivity extends FragmentActivity {
             }
         });
 
+        //reaction when pages change
+        //replace the activity's title with the title of the current item
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Crime crime = mCrimes.get(position);
+                if(crime != null)
+                    setTitle(crime.getmTitle());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         //show the item(crime) that was selected
         //instead of the first item in pagerAdapter
         UUID crimeId = (UUID) getIntent()
@@ -57,4 +78,5 @@ public class CrimePagerActivity extends FragmentActivity {
         }
 
     }
+
 }
