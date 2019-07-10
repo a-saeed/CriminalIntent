@@ -42,14 +42,15 @@ public class CrimeListFragment extends ListFragment {
     {
         //CrimeAdapter can hold Crime objects
         //no need to cast to Crime.
+        //get the crime from the adapter
         Crime c = ((CrimeAdapter) getListAdapter()).getItem(position);
-        //start CrimeActivity
+        //start CrimePagerActivity
         //CrimeListFragment uses the getActivity() method
         //to pass its hosting activity as the context object
         //that the intent constructor requires.
-        Intent i = new Intent(getActivity() , CrimeActivity.class);
+        Intent i = new Intent(getActivity() , CrimePagerActivity.class);
         //passing the mCrimeId as an EXTRA so that
-        //CrimeActivity data for a specific Crime.
+        //CrimePagerActivity data for a specific Crime.
         i.putExtra(CrimeFragment.EXTRA_CRIME_ID , c.getmId());
         startActivity(i);
     }
