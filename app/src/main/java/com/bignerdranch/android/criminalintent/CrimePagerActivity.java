@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CrimePagerActivity extends FragmentActivity {
     private ViewPager mViewPager;
@@ -41,5 +42,19 @@ public class CrimePagerActivity extends FragmentActivity {
                 return mCrimes.size();
             }
         });
+
+        //show the item(crime) that was selected
+        //instead of the first item in pagerAdapter
+        UUID crimeId = (UUID) getIntent()
+                .getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+        for (int i = 0 ; i < mCrimes.size() ; i++)
+        {
+            if(mCrimes.get(i).getmId() .equals(crimeId))
+            {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
+
     }
 }
