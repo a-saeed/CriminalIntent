@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -60,6 +61,7 @@ public class CrimeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
+
         //WIRE UP WIDGETS HERE
         //wiring crime tile EditText
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
@@ -82,10 +84,20 @@ public class CrimeFragment extends Fragment {
             }
         })
         ;
+
         //wiring crime date Button
+        //show a date picker dialog when clicked
         mDateButton = (Button) v.findViewById(R.id.crime_date);
         mDateButton.setText(mCrime.getmDate().toString());
-        mDateButton.setEnabled(false);
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment dialog = new DatePickerFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                dialog.show(fm , "date");
+            }
+        });
+
         //wiring crime solved Checkbox
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
