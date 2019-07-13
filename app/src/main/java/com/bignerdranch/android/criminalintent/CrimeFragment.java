@@ -1,6 +1,8 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,12 +19,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.util.Date;
 import java.util.UUID;
 
 
 public class CrimeFragment extends Fragment {
-    public static final String EXTRA_CRIME_ID =
+    static final String EXTRA_CRIME_ID =
             "com.bignerdranch.android.criminalintent.crime_id";
+    //request code
+    private static final int REQUEST_DATE = 0;
     private  Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
@@ -88,13 +93,16 @@ public class CrimeFragment extends Fragment {
         //wiring crime date Button
         //show a date picker dialog when clicked
         mDateButton = (Button) v.findViewById(R.id.crime_date);
-        mDateButton.setText(mCrime.getmDate().toString());
+        updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatePickerFragment dialog =
                         DatePickerFragment.newInstance(mCrime.getmDate());
                 FragmentManager fm = getActivity().getSupportFragmentManager();
+                //once the DatePickerFragment is created
+                //set crimeFragment as its Target fragment.
+                dialog.setTargetFragment(CrimeFragment.this , REQUEST_DATE);
                 dialog.show(fm , "date");
             }
         });
@@ -112,7 +120,25 @@ public class CrimeFragment extends Fragment {
         return v;
     }
 
+    //responding to the dialog
+    //overriding onActivityResult() to retrieve the extra,
+    //set the date on the crime
+    //and refresh the text of date button.
+    @Override
+    public void onActivityResult(int requestCode , int resultCode , Intent incomingIntent)
+    {
+        if(resultCode != Activity.RESULT_OK)
+            return;
+        if(requestCode == REQUEST_DATE)
+        {
+            Date date = (Date) incomingIntent
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setmDate(date);
+            updateDate();
+        }
+    }
 
-
-
+    private void updateDate() {
+        mDateButton.setText(mCrime.getmDate().toString());
+    }
 }

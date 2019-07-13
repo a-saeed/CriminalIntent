@@ -1,8 +1,10 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -14,7 +16,7 @@ import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
 {
-    private static final String EXTRA_DATE =
+    public static final String EXTRA_DATE =
             "com.bignerdranch.android.criminalintent.date";
     //date instance used to retrieve fragment arguments
     //(the EXTRA being sent to this fragment)
@@ -36,6 +38,23 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
         return dpf;
     }
+
+    //calling back to the Target fragment(CrimeFragment)
+    //a method that creates an intent,
+    //puts the date on it as an EXTRA
+    //then calls CrimeFragment.onActivityResult().
+    private void sendResult(int resultCode)
+    {
+        if(getTargetFragment()==null)
+            return;
+
+        Intent i = new Intent();
+        i.putExtra(EXTRA_DATE , mDate);
+
+        getTargetFragment()
+                .onActivityResult(getTargetRequestCode() , resultCode , i);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle onSavedInstance)
     {
@@ -61,6 +80,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         mDate =  new GregorianCalendar(year , month , day).getTime();
         // Update argument to preserve selected value on rotation
         getArguments().putSerializable(EXTRA_DATE , mDate);
+
+        sendResult(Activity.RESULT_OK);
 
 
     }
