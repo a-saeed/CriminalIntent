@@ -29,7 +29,7 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
 
     //Writing a newInstance(UUID)
-    //any activity in need of this fragment
+    //any activity (or fragment) in need of this fragment
     //should call this method.
     public static CrimeFragment newInstance(UUID crimeId)
     {
@@ -92,7 +92,8 @@ public class CrimeFragment extends Fragment {
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog =
+                        DatePickerFragment.newInstance(mCrime.getmDate());
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 dialog.show(fm , "date");
             }
