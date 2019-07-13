@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.ListFragment;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 public class CrimeListFragment extends ListFragment {
@@ -91,7 +92,10 @@ public class CrimeListFragment extends ListFragment {
 
             TextView dateTextView =
                     (TextView) convertView.findViewById(R.id.crime_list_item_dateTextView);
-            dateTextView.setText(c.getmDate().toString());
+            //format date
+            String formattedDate =
+                    DateFormat.getDateInstance(DateFormat.FULL).format(c.getmDate());
+            dateTextView.setText(formattedDate);
 
             CheckBox solvedCheckBox =
                     (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
