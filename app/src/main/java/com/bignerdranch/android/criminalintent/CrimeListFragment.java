@@ -2,12 +2,12 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,8 +22,14 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //tell the FragmentManager that this fragment
+        // should receive a call to onCreateOptionsMenu(…).
+        setHasOptionsMenu(true);
+
         //set title of the activity that will host this fragment
         getActivity().setTitle(R.string.crimes_title);
+
         //access list of crimes stored in crimeLab
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
 
@@ -64,6 +70,15 @@ public class CrimeListFragment extends ListFragment {
         //(or may have changed) so it can refetch the data
         //and reload the list
         ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    //creating options menu in action bar
+    @Override
+    public void onCreateOptionsMenu(Menu menu , MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu , inflater);
+        inflater.inflate(R.menu.fragment_crime_list , menu);
+
     }
     //a custom adapter to show crime-specific data in list view.
     private class CrimeAdapter extends ArrayAdapter<Crime>
