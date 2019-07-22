@@ -2,8 +2,8 @@ package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class CrimePagerActivity extends FragmentActivity {
+public class CrimePagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ArrayList<Crime> mCrimes;
     @Override
@@ -24,6 +24,7 @@ public class CrimePagerActivity extends FragmentActivity {
         mViewPager.setId(R.id.viewPager);
         setContentView(mViewPager);
 
+        setTitle("Crime Information");
         mCrimes = CrimeLab.get(this).getCrimes();
 
         //setting up the adapter

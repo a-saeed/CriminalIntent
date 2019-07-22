@@ -7,6 +7,9 @@ import java.util.UUID;
 
 //SINGLETON
 public class CrimeLab {
+    private static final String FILENAME = "crimes.json";
+    private CriminalIntentJSONSerializer mSerializer;
+
     private ArrayList<Crime> mCrimes;
 
     private static CrimeLab sCrimeLab; // automatically initialized to null
@@ -16,6 +19,7 @@ public class CrimeLab {
     {
         mAppContext = appContext;
         mCrimes = new ArrayList<Crime>();
+        mSerializer = new CriminalIntentJSONSerializer(mAppContext , FILENAME);
     }
 
     public static CrimeLab get (Context c)
@@ -41,6 +45,18 @@ public class CrimeLab {
     public void addCrime(Crime c)
     {
         mCrimes.add(c);
+    }
+
+    //saving changes persistently in CrimeLab
+    public boolean saveCrimes()
+    {
+        try
+        {
+            mSerializer.saveCrimes(mCrimes);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
 

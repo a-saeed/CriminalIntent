@@ -145,4 +145,11 @@ public class CrimeFragment extends Fragment {
                 DateFormat.getDateInstance(DateFormat.FULL).format(mCrime.getmDate());
         mDateButton.setText(formattedDate);
     }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        CrimeLab.get(getActivity()).saveCrimes();
+    }
 }
