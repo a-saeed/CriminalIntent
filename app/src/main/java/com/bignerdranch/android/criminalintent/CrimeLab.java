@@ -18,8 +18,13 @@ public class CrimeLab {
     private CrimeLab(Context appContext)
     {
         mAppContext = appContext;
-        mCrimes = new ArrayList<Crime>();
         mSerializer = new CriminalIntentJSONSerializer(mAppContext , FILENAME);
+        //load crimes into the ArrayList rather than always creating a new one
+        try {
+            mCrimes =mSerializer.loadCrimes();
+        } catch (Exception e){
+            mCrimes = new ArrayList<Crime>();
+        }
     }
 
     public static CrimeLab get (Context c)

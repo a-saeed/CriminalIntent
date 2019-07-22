@@ -95,11 +95,9 @@ public class CrimeListFragment extends ListFragment {
                 Intent i = new Intent(getActivity(),CrimePagerActivity.class);
                 i.putExtra(CrimeFragment.EXTRA_CRIME_ID,crime.getmId());
                 startActivityForResult(i,0);
-                startActivity(i);
                 return true;
                 default:
                     super.onOptionsItemSelected(item);
-
         }
         return false;
     }

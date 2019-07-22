@@ -24,6 +24,17 @@ public class Crime
         mDate = new Date();
     }
 
+    //adding a constructor that takes a JSOnObject
+    //to load data from local files.
+    public Crime(JSONObject json) throws JSONException
+    {
+        mId = UUID.fromString(json.getString(JSON_ID));
+        if(json.has(JSON_TITLE))
+            mTitle = json.getString(JSON_TITLE);
+        isSolved = json.getBoolean(JSON_SOLVED);
+        mDate = new Date (json.getLong(JSON_DATE));
+    }
+
     public UUID getmId() {
         return mId;
     }
@@ -67,7 +78,7 @@ public class Crime
         json.put(JSON_ID , mId.toString());
         json.put(JSON_TITLE , mTitle);
         json.put(JSON_SOLVED , isSolved);
-        json.put(JSON_DATE , mDate);
+        json.put(JSON_DATE , mDate.getTime());
         return json;
     }
 }
