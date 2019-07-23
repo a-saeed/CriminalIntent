@@ -2,11 +2,14 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 public class CrimeListFragment extends ListFragment {
     private static final String TAG="CrimeListFragment";
     private ArrayList<Crime> mCrimes;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,17 @@ public class CrimeListFragment extends ListFragment {
         // ListFragment convenience method that you can use to
         // set the adapter of the implicit ListView managed by CrimeListFragment.
         setListAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater , ViewGroup parent , Bundle savedInstanceState)
+    {
+        View v = super.onCreateView(inflater , parent , savedInstanceState);
+        //register view for a floating context menu
+        //(context menu doesn't show unless registered).
+        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        registerForContextMenu(listView);
+        return v;
     }
 
     //list item click listener
@@ -97,10 +112,41 @@ public class CrimeListFragment extends ListFragment {
                 startActivityForResult(i,0);
                 return true;
                 default:
-                    super.onOptionsItemSelected(item);
+                   return super.onOptionsItemSelected(item);
         }
-        return false;
     }
+
+    //creating the context menu
+    @Override
+    public void onCreateContextMenu(ContextMenu menu , View v , ContextMenu.ContextMenuInfo menuInfo)
+    {
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.crime_list_item_context , menu);
+    }
+
+    //respond to menu item selection
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        //not enough to know the user wants to delete a crime (identified by the MenuItem)
+        //need to know which crime was selected.
+        //item.getMenuInfo() does the job.
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int position = info.position;
+        CrimeAdapter adapter = (CrimeAdapter)getListAdapter();
+        Crime crime = adapter.getItem(position);
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete_crime:
+                CrimeLab.get(getActivity()).deleteCrime(crime);
+                adapter.notifyDataSetChanged();
+                CrimeLab.get(getActivity()).saveCrimes();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+
+    }
+
     //a custom adapter to show crime-specific data in list view.
     private class CrimeAdapter extends ArrayAdapter<Crime>
     {

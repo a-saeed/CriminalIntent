@@ -52,6 +52,11 @@ public class CrimeLab {
         mCrimes.add(c);
     }
 
+    public void deleteCrime(Crime c)
+    {
+        mCrimes.remove(c);
+    }
+
     //saving changes persistently in CrimeLab
     public boolean saveCrimes()
     {
