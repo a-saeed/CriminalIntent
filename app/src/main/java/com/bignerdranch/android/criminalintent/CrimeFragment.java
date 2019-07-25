@@ -1,17 +1,16 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -60,6 +59,10 @@ public class CrimeFragment extends Fragment {
         //use the EXTRA crimeId to fetch
         //the crime from CrimeLab.
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+
+        //tell the FragmentManager that this fragment
+        // should receive a call to onCreateOptionsMenu(…).
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -151,5 +154,34 @@ public class CrimeFragment extends Fragment {
     {
         super.onPause();
         CrimeLab.get(getActivity()).saveCrimes();
+    }
+
+    //enabling deletion of a crime from its detail view as well from the list
+    @Override
+    public void onCreateOptionsMenu(Menu menu , MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu , inflater);
+        inflater.inflate(R.menu.crime_list_item_context , menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.menu_item_delete_crime:
+                CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                CrimeLab.get(getActivity()).saveCrimes();
+                Intent i = new Intent(getActivity() , CrimeListActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.menu_item_done:
+                Intent c = new Intent(getActivity() , CrimeListActivity.class);
+                startActivity(c);
+                return true;
+
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 }
