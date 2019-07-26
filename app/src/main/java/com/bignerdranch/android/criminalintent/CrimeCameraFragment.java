@@ -1,6 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
-import android.graphics.Camera;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
@@ -30,5 +30,25 @@ public class CrimeCameraFragment extends Fragment {
 
         mSurfaceView = (SurfaceView)v.findViewById(R.id.crime_camera_surfaceView);
         return v;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //target api >= 9
+        //acquiring a camera instance
+        mCamera = Camera.open(0);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        //releasing the camera when not in use
+        if(mCamera != null){
+            mCamera.release();
+            mCamera = null;
+        }
     }
 }
