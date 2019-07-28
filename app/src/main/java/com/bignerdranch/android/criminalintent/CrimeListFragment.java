@@ -59,6 +59,7 @@ public class CrimeListFragment extends ListFragment {
         //(context menu doesn't show unless registered).
         ListView listView = (ListView)v.findViewById(android.R.id.list);
 
+        //a graceful fallback.
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
         registerForContextMenu(listView);
         else {

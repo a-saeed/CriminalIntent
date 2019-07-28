@@ -37,7 +37,7 @@ public class CrimeCameraFragment extends Fragment {
         });
 
         mSurfaceView = (SurfaceView)v.findViewById(R.id.crime_camera_surfaceView);
-        final SurfaceHolder holder = mSurfaceView.getHolder();
+        SurfaceHolder holder = mSurfaceView.getHolder();
         // setType() and SURFACE_TYPE_PUSH_BUFFERS are both deprecated,
         // but are required for Camera preview to work on pre-3.0 devices.
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -49,7 +49,7 @@ public class CrimeCameraFragment extends Fragment {
                 //tell the camera to use this surface as its preview area
                 try{
                     if(mCamera != null)
-                        mCamera.setPreviewDisplay(holder);
+                        mCamera.setPreviewDisplay(surfaceHolder);
                 }
                 catch (IOException exception){
                     Log.e(TAG , "Error setting up preview display" , exception);
@@ -63,7 +63,7 @@ public class CrimeCameraFragment extends Fragment {
                 //the surface has changed size ; update the camera preview size
                 Camera.Parameters parameters = mCamera.getParameters();
                 Camera.Size s = getBestSupportedSize(parameters.getSupportedPreviewSizes(), w, h);
-                parameters.setPreviewSize(w , h);
+                parameters.setPreviewSize(s.width, s.height);
                 mCamera.setParameters(parameters);
 
                 try{

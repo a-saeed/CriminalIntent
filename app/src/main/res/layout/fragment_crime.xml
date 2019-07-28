@@ -20,6 +20,7 @@
             android:layout_marginRight="4dp">
 
             <ImageButton
+                android:id="@+id/crime_imageButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_camera"/>

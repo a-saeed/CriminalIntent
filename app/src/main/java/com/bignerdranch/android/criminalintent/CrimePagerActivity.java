@@ -24,7 +24,6 @@ public class CrimePagerActivity extends AppCompatActivity {
         mViewPager.setId(R.id.viewPager);
         setContentView(mViewPager);
 
-        setTitle("Crime Information");
         mCrimes = CrimeLab.get(this).getCrimes();
 
         //setting up the adapter
