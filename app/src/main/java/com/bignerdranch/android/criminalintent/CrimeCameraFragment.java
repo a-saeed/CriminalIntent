@@ -1,9 +1,10 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Context;
 import android.hardware.Camera;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,13 +14,59 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class CrimeCameraFragment extends Fragment {
     private static final String TAG = "CrimeCameraFragment";
     private Camera mCamera;
     private SurfaceView mSurfaceView;
+    private View mProgressContainer;
+    //needed to implement camera callbacks
+
+    //occurs when the camera captures the picture
+    //but before the image data is processed and available.
+    private Camera.ShutterCallback mShutterCallback = new Camera.ShutterCallback() {
+        @Override
+        public void onShutter() {
+            //display the progress indicator
+            mProgressContainer.setVisibility(View.VISIBLE);
+        }
+    };
+
+    //dealing with the captured JPEG picture
+    private Camera.PictureCallback mJpegCallback = new Camera.PictureCallback()
+    {
+        public void onPictureTaken (byte[] data , Camera camera)
+        {
+            //create fileName
+            String fileName = UUID.randomUUID().toString() + ".jpg";
+            //save the jpeg data to disk
+            FileOutputStream os = null;
+            boolean success = true;
+            try {
+                os = getActivity().openFileOutput(fileName , Context.MODE_PRIVATE);
+                os.write(data);
+            } catch (Exception e) {
+                Log.e(TAG , "error writing to file" , e);
+                success = false;
+            } finally {
+                try {
+                    if (os != null)
+                        os.close();
+                } catch (Exception e){
+                    Log.e(TAG , "error closing file" , e);
+                    success = false;
+                }
+            }
+            if (success)
+                Log.i(TAG , "picture saved successfully");
+            getActivity().finish();
+        }
+    };
+
 
     @Override
     @SuppressWarnings("deprecation")
@@ -32,9 +79,15 @@ public class CrimeCameraFragment extends Fragment {
         takePictureButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
-                getActivity().finish();
+                if (mCamera != null)
+                    mCamera.takePicture(mShutterCallback , null , mJpegCallback);
             }
         });
+
+        //setting the frameLayout as invisible
+        //as long as the "TAKE" button isn't clicked.
+        mProgressContainer = v.findViewById(R.id.crime_camera_progressContainer);
+        mProgressContainer.setVisibility(View.INVISIBLE);
 
         mSurfaceView = (SurfaceView)v.findViewById(R.id.crime_camera_surfaceView);
         SurfaceHolder holder = mSurfaceView.getHolder();
@@ -64,6 +117,11 @@ public class CrimeCameraFragment extends Fragment {
                 Camera.Parameters parameters = mCamera.getParameters();
                 Camera.Size s = getBestSupportedSize(parameters.getSupportedPreviewSizes(), w, h);
                 parameters.setPreviewSize(s.width, s.height);
+
+                //set the picture size
+                s = getBestSupportedSize(parameters.getSupportedPictureSizes(), w, h);
+                parameters.setPictureSize(s.width, s.height);
+
                 mCamera.setParameters(parameters);
 
                 try{
