@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +28,10 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
     static final String EXTRA_CRIME_ID =
             "com.bignerdranch.android.criminalintent.crime_id";
+    private static final String TAG = "CrimeFragment";
     //request code
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 1;
     private  Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
@@ -130,14 +133,14 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
-                startActivity(i);
+                startActivityForResult(i , REQUEST_PHOTO);
             }
         });
 
         return v;
     }
 
-    //responding to the dialog
+    //responding to the dialog , or the camera.
     //overriding onActivityResult() to retrieve the extra,
     //set the date on the crime
     //and refresh the text of date button.
@@ -152,6 +155,13 @@ public class CrimeFragment extends Fragment {
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setmDate(date);
             updateDate();
+        }
+        else if (requestCode == REQUEST_PHOTO)
+        {
+            //create a new photo object and attach it to the crime.
+            String filename = incomingIntent.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
+            if(filename != null)
+                Log.i(TAG , "received");
         }
     }
 

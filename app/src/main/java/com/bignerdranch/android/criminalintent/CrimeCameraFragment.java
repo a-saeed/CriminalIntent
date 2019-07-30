@@ -1,8 +1,9 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class CrimeCameraFragment extends Fragment {
+    public static final String EXTRA_PHOTO_FILENAME = "com.bignerdranch.android.criminalintent.photo_filename";
+
     private static final String TAG = "CrimeCameraFragment";
     private Camera mCamera;
     private SurfaceView mSurfaceView;
@@ -61,8 +64,14 @@ public class CrimeCameraFragment extends Fragment {
                     success = false;
                 }
             }
-            if (success)
-                Log.i(TAG , "picture saved successfully");
+            //set the photo fileName on the on the result intent
+            if (success) {
+                Intent i = new Intent();
+                getActivity().setResult(Activity.RESULT_OK , i);
+            }
+            else {
+                getActivity().setResult(Activity.RESULT_CANCELED);
+            }
             getActivity().finish();
         }
     };
