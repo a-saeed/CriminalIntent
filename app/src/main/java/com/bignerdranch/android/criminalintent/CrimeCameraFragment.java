@@ -67,6 +67,7 @@ public class CrimeCameraFragment extends Fragment {
             //set the photo fileName on the on the result intent
             if (success) {
                 Intent i = new Intent();
+                i.putExtra(EXTRA_PHOTO_FILENAME , fileName);
                 getActivity().setResult(Activity.RESULT_OK , i);
             }
             else {

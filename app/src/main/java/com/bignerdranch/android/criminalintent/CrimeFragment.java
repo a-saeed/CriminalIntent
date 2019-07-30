@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -167,9 +168,12 @@ public class CrimeFragment extends Fragment {
             String filename = incomingIntent.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
             if(filename != null)
             {
+
                 Photo p =new Photo(filename);
                 mCrime.setmPhoto(p);
-                Log.i(TAG, "Crime: " + mCrime.getmTitle() + " has a photo");
+                //ensure that the image will be visible when user returns
+                //from crimeCameraActivity
+                showPhoto();
             }
         }
     }
@@ -216,4 +220,34 @@ public class CrimeFragment extends Fragment {
                     return super.onOptionsItemSelected(item);
         }
     }
+
+    private void showPhoto()
+    {
+        //(Re)set the image button's image based on our photo
+        Photo p = mCrime.getmPhoto();
+        BitmapDrawable b = null;
+        if (p != null)
+        {
+            String path = getActivity().getFileStreamPath(p.getFilename()).getAbsolutePath();
+            b = PictureUtils.getScaledDrawable(getActivity() , path);
+        }
+        mPhotoView.setImageDrawable(b);
+    }
+
+    @Override
+    public void onStart()
+    {
+        //have the photo ready as soon as CrimeFragment's view becomes visible.
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop()
+    {
+        //unloading the image
+        super.onStop();
+        PictureUtils.cleanImageView(mPhotoView);
+    }
+
 }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
+import android.widget.ImageView;
 
 public class PictureUtils {
 
@@ -36,6 +37,16 @@ public class PictureUtils {
         options.inSampleSize = inSampleSize;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         return new BitmapDrawable(a.getResources(), bitmap);
+    }
+
+    public static void cleanImageView(ImageView imageView)
+    {
+        if (!(imageView.getDrawable() instanceof BitmapDrawable))
+            return;
+        // Clean up the view's image for the sake of memory
+        BitmapDrawable b = (BitmapDrawable)imageView.getDrawable();
+        b.getBitmap().recycle();
+        imageView.setImageDrawable(null);
     }
 }
 
