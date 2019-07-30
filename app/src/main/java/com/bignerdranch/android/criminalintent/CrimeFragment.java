@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -37,6 +38,7 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
     //Writing a newInstance(UUID)
     //any activity (or fragment) in need of this fragment
@@ -137,6 +139,9 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        //wiring the imageView
+        mPhotoView = (ImageView)v.findViewById(R.id.crime_imageView);
+
         return v;
     }
 
@@ -161,7 +166,11 @@ public class CrimeFragment extends Fragment {
             //create a new photo object and attach it to the crime.
             String filename = incomingIntent.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
             if(filename != null)
-                Log.i(TAG , "received");
+            {
+                Photo p =new Photo(filename);
+                mCrime.setmPhoto(p);
+                Log.i(TAG, "Crime: " + mCrime.getmTitle() + " has a photo");
+            }
         }
     }
 

@@ -8,15 +8,18 @@ import java.util.UUID;
 
 public class Crime
 {
-    public static final String JSON_ID = "id";
-    public static final String JSON_TITLE = "title";
-    public static final String JSON_SOLVED = "solved";
-    public static final String JSON_DATE = "date";
+    private static final String JSON_ID = "id";
+    private static final String JSON_TITLE = "title";
+    private static final String JSON_SOLVED = "solved";
+    private static final String JSON_DATE = "date";
+    private static final String JSON_PHOTO = "photo";
     
     private UUID mId;
     private String mTitle;
     private Date mDate;
     private boolean isSolved;
+    private Photo mPhoto;
+
     public Crime()
     {
         //Generate a unique identifier
@@ -33,6 +36,9 @@ public class Crime
             mTitle = json.getString(JSON_TITLE);
         isSolved = json.getBoolean(JSON_SOLVED);
         mDate = new Date (json.getLong(JSON_DATE));
+
+        if (json.has(JSON_PHOTO))
+            mPhoto = new Photo(json.getJSONObject(JSON_PHOTO));
     }
 
     public UUID getmId() {
@@ -63,6 +69,14 @@ public class Crime
         this.mTitle = mTitle;
     }
 
+    public Photo getmPhoto() {
+        return mPhoto;
+    }
+
+    public void setmPhoto(Photo mPhoto) {
+        this.mPhoto = mPhoto;
+    }
+
     //overriding toString() to populate
     //TextView in ArrayAdapter with
     //useful information
@@ -79,6 +93,8 @@ public class Crime
         json.put(JSON_TITLE , mTitle);
         json.put(JSON_SOLVED , isSolved);
         json.put(JSON_DATE , mDate.getTime());
+        if (mPhoto != null)
+            json.put(JSON_PHOTO , mPhoto.toJSON());
         return json;
     }
 }
