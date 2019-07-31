@@ -156,6 +156,22 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        //wiring the reportButton to use implicit intent
+        //to SEND the crime report via a chosen app.
+        Button reportButton = (Button)v.findViewById(R.id.crime_reportButton);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT , getCrimeReport());
+                i.putExtra(Intent.EXTRA_SUBJECT , getString(R.string.crime_report_subject));
+                i = Intent.createChooser(i , getString(R.string.send_report));
+                startActivity(i);
+
+            }
+        });
+
         return v;
     }
 
@@ -273,13 +289,16 @@ public class CrimeFragment extends Fragment {
         else
             solvedString = getString(R.string.crime_report_unsolved);
 
+        String formattedDate =
+                DateFormat.getDateInstance(DateFormat.FULL).format(mCrime.getmDate());
+
         String suspect = mCrime.getmSuspect();
         if (suspect == null)
             suspect = getString(R.string.crime_report_no_suspect);
         else
             suspect = getString(R.string.crime_report_subject);
 
-        String report = getString(R.string.crime_report , mCrime.getmTitle() , mCrime.getmDate() ,
+        String report = getString(R.string.crime_report , mCrime.getmTitle() , formattedDate ,
                 solvedString , suspect);
 
         return  report;
