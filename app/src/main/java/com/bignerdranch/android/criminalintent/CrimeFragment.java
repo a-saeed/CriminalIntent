@@ -2,10 +2,14 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,12 +38,15 @@ public class CrimeFragment extends Fragment {
     //request code
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 1;
+    private static final int REQUEST_CONTACT = 3;
+
     private  Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private Button mSuspectButton;
 
     //Writing a newInstance(UUID)
     //any activity (or fragment) in need of this fragment
@@ -172,6 +179,23 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        //wiring the suspectButton to use implicit intent
+        //to PICK a suspect from contacts list
+        mSuspectButton = (Button)v.findViewById(R.id.crime_suspectButton);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //teh action is to PICK
+                //the data comes from contacts list
+                Intent i = new Intent(Intent.ACTION_PICK , ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(i , REQUEST_CONTACT);
+
+                if (mCrime.getmSuspect() != null)
+                    mSuspectButton.setText(mCrime.getmSuspect());
+
+            }
+        });
+
         return v;
     }
 
@@ -204,6 +228,33 @@ public class CrimeFragment extends Fragment {
                 //from crimeCameraActivity
                 showPhoto();
             }
+        }
+        //contacts list need to respond with the name
+        //that the user picked
+        else if (requestCode == REQUEST_CONTACT)
+        {
+            Uri contactUri = incomingIntent.getData();
+            //specify which fields you want your query
+            //to return values for.
+            String[] queryFields = new String[]
+                    {ContactsContract.Contacts.DISPLAY_NAME};
+            //perform your query - the contactUri is like
+            //a where clause here.
+            Cursor c = getActivity().getContentResolver()
+                    .query(contactUri, queryFields, null,null,null);
+            //double check that we actually got results
+            if (c.getCount() == 0)
+            {
+                c.close();
+                return;
+            }
+            //pull out the first column of the first raw of data
+            //that is our suspect's name
+            c.moveToFirst();
+            String suspect = c.getString(0);
+            mCrime.setmSuspect(suspect);
+            mSuspectButton.setText(suspect);
+            c.close();
         }
     }
 
