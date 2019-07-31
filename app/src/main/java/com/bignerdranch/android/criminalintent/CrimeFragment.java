@@ -263,4 +263,26 @@ public class CrimeFragment extends Fragment {
         PictureUtils.cleanImageView(mPhotoView);
     }
 
+    //create four strings , piece them together and
+    //return a complete crime report.
+    private String getCrimeReport()
+    {
+        String solvedString = null;
+        if (mCrime.isSolved())
+            solvedString = getString(R.string.crime_report_solved);
+        else
+            solvedString = getString(R.string.crime_report_unsolved);
+
+        String suspect = mCrime.getmSuspect();
+        if (suspect == null)
+            suspect = getString(R.string.crime_report_no_suspect);
+        else
+            suspect = getString(R.string.crime_report_subject);
+
+        String report = getString(R.string.crime_report , mCrime.getmTitle() , mCrime.getmDate() ,
+                solvedString , suspect);
+
+        return  report;
+    }
+
 }
