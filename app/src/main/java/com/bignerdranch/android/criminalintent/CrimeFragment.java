@@ -142,6 +142,19 @@ public class CrimeFragment extends Fragment {
 
         //wiring the imageView
         mPhotoView = (ImageView)v.findViewById(R.id.crime_imageView);
+        //show a larger version of the image when clicked
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Photo p = mCrime.getmPhoto();
+                if (p == null)
+                    return;
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                String path = getActivity().getFileStreamPath(p.getFilename()).getAbsolutePath();
+                ImageFragment.newInstance(path).show(fm , "image");
+            }
+        });
 
         return v;
     }
